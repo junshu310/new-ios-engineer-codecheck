@@ -33,10 +33,14 @@ class ViewController: UITableViewController, UISearchBarDelegate {
             let url = "https://api.github.com/search/repositories?q=\(keyword)"
             let encordURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, err) in
-                
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any],
-                   let items = obj["items"] as? [[String: Any]] {
-                    self.responses = items
+                if let err = err {
+                    print("ERROR: \(err)")
+                    return
+                }
+                if let data = data {
+                    let obj = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
+                    let items = obj!["items"] as? [[String: Any]]
+                    self.responses = items!
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
@@ -67,7 +71,6 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "Repository")
         let response = responses[indexPath.row]
         cell.textLabel?.text = response["full_name"] as? String ?? ""
-        print(response["language"] as? String ?? "")
         cell.detailTextLabel?.text = response["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
