@@ -12,9 +12,8 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var repositorySearchBar: UISearchBar!
     
-    var responses: [[String : Any]] = []
+    var responses = [[String : Any]]()
     
-    var task: URLSessionTask?
     var keyword: String = ""
     var index: Int = 0
         
@@ -41,29 +40,7 @@ class ViewController: UITableViewController, UISearchBarDelegate {
             searchBar.resignFirstResponder()
             activityIndicator.startAnimating()
             let url = "https://api.github.com/search/repositories?q=\(keyword)"
-            let encordURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, err) in
-                if let err = err {
-                    DispatchQueue.main.async {
-                        //以下は、メインスレッドで呼ぶ
-                        self.activityIndicator.stopAnimating()
-                        self.showError(message: "通信状況を確認し、\nもう一度お試し下さい。")
-                    }
-                    print("ERROR: \(err)")
-                    return
-                }
-                if let data = data {
-                    let obj = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
-                    let items = obj!["items"] as? [[String: Any]]
-                    self.responses = items!
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-            // これ呼ばなきゃリストが更新されません
-            task?.resume()
+            parse(url: url)
         } else {
             showError(message: "文字を入力して下さい。")
         }
@@ -103,6 +80,34 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     
     
     //MARK: FUNCTIONS
+    
+    func parse(url: String) {
+        
+        let encordURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, error) in
+            if error != nil {
+                DispatchQueue.main.async {
+                    //以下は、メインスレッドで呼ぶ
+                    self.activityIndicator.stopAnimating()
+                    self.showError(message: "情報の取得に失敗しました。\n通信状況などを確認し、もう一度お試し下さい。")
+                }
+                print("ERROR: \(error!.localizedDescription)")
+                return
+            }
+            
+            if let data = data {
+                let obj = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
+                let items = obj!["items"] as? [[String: Any]]
+                self.responses = items!
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        // これ呼ばなきゃリストが更新されません
+        task.resume()
+    }
     
     func showError(message: String) {
         let alert: UIAlertController = UIAlertController(title: "Error!", message: message, preferredStyle: .alert)

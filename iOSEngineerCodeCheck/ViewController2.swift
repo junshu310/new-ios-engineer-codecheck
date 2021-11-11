@@ -47,9 +47,9 @@ class ViewController2: UIViewController {
         
         if let owner = repo["owner"] as? [String: Any],
            let imgURL = owner["avatar_url"] as? String {
-            URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, err) in
-                if let err = err {
-                    print("ERROR: \(err)")
+            URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, error) in
+                if error != nil {
+                    print("ERROR: \(error!.localizedDescription)")
                     return
                 }
                 if let data = data {
