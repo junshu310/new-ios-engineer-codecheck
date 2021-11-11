@@ -17,12 +17,20 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     var task: URLSessionTask?
     var keyword: String = ""
     var index: Int = 0
+        
+    var activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         repositorySearchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         repositorySearchBar.delegate = self
+        //スクロールでキーボードを閉じる
+        tableView.keyboardDismissMode = .onDrag
+        
+        activityIndicator.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/3)
+        activityIndicator.style = .large
+        view.addSubview(activityIndicator)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -30,10 +38,17 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         keyword = searchBar.text!.removeWhitespacesAndNewlines
         
         if keyword.count != 0 {
+            searchBar.resignFirstResponder()
+            activityIndicator.startAnimating()
             let url = "https://api.github.com/search/repositories?q=\(keyword)"
             let encordURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, err) in
                 if let err = err {
+                    DispatchQueue.main.async {
+                        //以下は、メインスレッドで呼ぶ
+                        self.activityIndicator.stopAnimating()
+                        self.showError(message: "通信状況を確認し、\nもう一度お試し下さい。")
+                    }
                     print("ERROR: \(err)")
                     return
                 }
@@ -42,20 +57,23 @@ class ViewController: UITableViewController, UISearchBarDelegate {
                     let items = obj!["items"] as? [[String: Any]]
                     self.responses = items!
                     DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
                         self.tableView.reloadData()
                     }
                 }
             }
             // これ呼ばなきゃリストが更新されません
             task?.resume()
+        } else {
+            showError(message: "文字を入力して下さい。")
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "Detail"{
-            let detail = segue.destination as? ViewController2
-            detail?.vc1 = self
+            let vc2 = segue.destination as? ViewController2
+            vc2?.repo = responses[index]
         }
     }
     
@@ -77,9 +95,21 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        repositorySearchBar.resignFirstResponder()
         // 画面遷移時に呼ばれる
         index = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        performSegue(withIdentifier: "Detail", sender: nil)
+    }
+    
+    
+    //MARK: FUNCTIONS
+    
+    func showError(message: String) {
+        let alert: UIAlertController = UIAlertController(title: "Error!", message: message, preferredStyle: .alert)
+        let okAction: UIAlertAction = UIAlertAction(title: "OK", style: .default)
+
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

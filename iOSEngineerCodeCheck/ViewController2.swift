@@ -21,13 +21,13 @@ class ViewController2: UIViewController {
     @IBOutlet weak var forksLabel: UILabel!
     @IBOutlet weak var issuesLabel: UILabel!
     
-    var vc1: ViewController?
+    var repo = [String : Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let repo = vc1!.responses[vc1!.index]
-        
+                
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.5
         getInfo(repo: repo)
         getImage(repo: repo)
     }
