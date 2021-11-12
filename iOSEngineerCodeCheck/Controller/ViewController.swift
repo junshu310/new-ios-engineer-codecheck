@@ -35,14 +35,27 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         keyword = searchBar.text!.removeWhitespacesAndNewlines
-        
         if keyword.count != 0 {
             searchBar.resignFirstResponder()
             activityIndicator.startAnimating()
-            let url = "https://api.github.com/search/repositories?q=\(keyword)"
-            parse(url: url)
+            let urlString = "https://api.github.com/search/repositories?q=\(keyword)"
+            
+            AnalyticsModel.instance.parse(urlString: urlString) { success, items in
+                if success {
+                    self.responses = items!
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.tableView.reloadData()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.showError(title: "Error!", message: "読み込みに失敗しました。")
+                    }
+                }
+            }
         } else {
-            showError(message: "文字を入力して下さい。")
+            self.showError(title: "Error!", message: "文字を入力して下さい。")
         }
     }
     
@@ -65,8 +78,8 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "Repository")
         let response = responses[indexPath.row]
-        cell.textLabel?.text = response["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = response["language"] as? String ?? ""
+        cell.textLabel?.text = response[RepositoryData.Items.fullName] as? String ?? ""
+        cell.detailTextLabel?.text = response[RepositoryData.Items.lang] as? String ?? ""
         cell.tag = indexPath.row
         return cell
     }
@@ -81,47 +94,12 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     
     //MARK: FUNCTIONS
     
-    func parse(url: String) {
+    func showError(title: String?, message: String?) {
         
-        let encordURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, error) in
-            if error != nil {
-                DispatchQueue.main.async {
-                    //以下は、メインスレッドで呼ぶ
-                    self.activityIndicator.stopAnimating()
-                    self.showError(message: "情報の取得に失敗しました。\n通信状況などを確認し、もう一度お試し下さい。")
-                }
-                print("ERROR: \(error!.localizedDescription)")
-                return
-            }
-            
-            if let data = data {
-                let obj = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
-                let items = obj!["items"] as? [[String: Any]]
-                self.responses = items!
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.tableView.reloadData()
-                }
-            }
-        }
-        // これ呼ばなきゃリストが更新されません
-        task.resume()
-    }
-    
-    func showError(message: String) {
-        let alert: UIAlertController = UIAlertController(title: "Error!", message: message, preferredStyle: .alert)
+        let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction: UIAlertAction = UIAlertAction(title: "OK", style: .default)
 
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
-    }
-}
-
-
-extension StringProtocol where Self: RangeReplaceableCollection {
-    ///スペースを取り除き、新しい文を返す
-    var removeWhitespacesAndNewlines: Self {
-        filter { !$0.isNewline && !$0.isWhitespace }
     }
 }
