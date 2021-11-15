@@ -16,14 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="6rq-CD-Hob">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Repository" textLabel="V66-xN-aKy" detailTextLabel="E7E-kF-FF6" style="IBUITableViewCellStyleValue1" id="jZX-YR-etd">
-                                <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jZX-YR-etd" id="k29-jL-IM1">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -50,13 +45,12 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="ktq-eC-ZBq"/>
                     <connections>
-                        <outlet property="repositorySearchBar" destination="6rq-CD-Hob" id="6Eb-BZ-hah"/>
                         <segue destination="AHY-RL-7mG" kind="show" identifier="Detail" id="qqd-8W-4W1"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xer-fe-JeW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-498" y="137"/>
+            <point key="canvasLocation" x="-503" y="137"/>
         </scene>
         <!--View Controller2-->
         <scene sceneID="JOC-74-7VT">
@@ -128,9 +122,7 @@
                             <constraint firstItem="4q1-pG-WSB" firstAttribute="top" secondItem="Iim-eb-8Ad" secondAttribute="bottom" constant="28" id="G2L-KM-330"/>
                             <constraint firstItem="4q1-pG-WSB" firstAttribute="centerX" secondItem="Iim-eb-8Ad" secondAttribute="centerX" id="Ght-Nb-HEu"/>
                             <constraint firstItem="srK-fe-i1b" firstAttribute="trailing" secondItem="Iim-eb-8Ad" secondAttribute="trailing" constant="20" id="IgU-EN-fM3"/>
-                            <constraint firstItem="srK-fe-i1b" firstAttribute="trailing" secondItem="4q1-pG-WSB" secondAttribute="trailing" constant="20" id="RHT-LK-YrI"/>
                             <constraint firstItem="oOe-O2-3RS" firstAttribute="top" secondItem="4q1-pG-WSB" secondAttribute="bottom" constant="22.5" id="TYg-Nz-sNO"/>
-                            <constraint firstItem="4q1-pG-WSB" firstAttribute="leading" secondItem="srK-fe-i1b" secondAttribute="leading" constant="20" id="YPT-BN-XSe"/>
                             <constraint firstItem="srK-fe-i1b" firstAttribute="trailing" secondItem="oOe-O2-3RS" secondAttribute="trailing" constant="20" id="Z52-Hv-QiK"/>
                             <constraint firstItem="oOe-O2-3RS" firstAttribute="width" secondItem="Iim-eb-8Ad" secondAttribute="width" id="dPu-j0-Myp"/>
                             <constraint firstItem="oOe-O2-3RS" firstAttribute="centerX" secondItem="4q1-pG-WSB" secondAttribute="centerX" id="kVV-YK-ePr"/>

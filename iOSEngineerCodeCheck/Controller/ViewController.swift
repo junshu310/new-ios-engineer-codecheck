@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UITableViewController, UISearchBarDelegate {
     
-    @IBOutlet weak var repositorySearchBar: UISearchBar!
+    let repositorySearchBar = UISearchBar()
     
     var responses = [[String : Any]]()
     
@@ -21,15 +21,18 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
         repositorySearchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         repositorySearchBar.delegate = self
         //スクロールでキーボードを閉じる
         tableView.keyboardDismissMode = .onDrag
         
-        activityIndicator.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/3)
+        navigationItem.title = "GitHub リポジトリ検索"
+        navigationItem.backButtonTitle = " "
+        
+        activityIndicator.center = CGPoint(x: self.view.bounds.size.width/2, y: self.view.bounds.size.height/3)
         activityIndicator.style = .large
-        view.addSubview(activityIndicator)
+        self.view.addSubview(activityIndicator)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -69,6 +72,20 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     
     
     //MARK: TABLEVIEW CELL
+    
+    //section使う時に必須のメソッド
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return ""
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return repositorySearchBar
+    }
+    
+    //searchBarの幅に合わせる為に必要な処理
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return responses.count
