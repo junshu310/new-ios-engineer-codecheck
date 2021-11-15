@@ -98,7 +98,6 @@
 		9464F4C1273D7BAC00F70CBC /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BFD945E4244DC5E80012785A /* Main.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -143,6 +142,7 @@
 				9464F4C1273D7BAC00F70CBC /* View */,
 				9464F4C0273D7B9D00F70CBC /* Controller */,
 				BFD945E7244DC5EB0012785A /* Assets.xcassets */,
+				BFD945E4244DC5E80012785A /* Main.storyboard */,
 				BFD945E9244DC5EB0012785A /* LaunchScreen.storyboard */,
 				BFD945EC244DC5EB0012785A /* Info.plist */,
 			);
