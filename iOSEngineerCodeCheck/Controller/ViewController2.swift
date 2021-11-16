@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class ViewController2: UIViewController {
     
@@ -33,6 +34,16 @@ class ViewController2: UIViewController {
         
         presentData(repo: repo)
         presentAvatarImage(repo: repo)
+    }
+    
+    @IBAction func toSafari(_ sender: Any) {
+        
+        if let urlString = repo[RepositoryData.Items.url] as? String {
+            
+            let url = URL(string: urlString)
+            let safariVC = SFSafariViewController(url: url!)
+            self.present(safariVC, animated: true, completion: nil)
+        }
     }
     
     //MARK: FUNCTIONS
