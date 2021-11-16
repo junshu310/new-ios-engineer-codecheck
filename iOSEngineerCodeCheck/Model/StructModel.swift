@@ -19,6 +19,7 @@ struct RepositoryData {
         static let watchers = "wachers_count"
         static let forks = "forks_count"
         static let issues = "open_issues_count"
+        static let url = "html_url"
         
         static let owner = "owner"
         
