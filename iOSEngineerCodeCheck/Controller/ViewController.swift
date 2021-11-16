@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UITableViewController, UISearchBarDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource , UISearchBarDelegate {
     
+    @IBOutlet weak var tableView: UITableView!
     let repositorySearchBar = UISearchBar()
     
     var responses = [[String : Any]]()
@@ -26,6 +27,8 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         repositorySearchBar.delegate = self
         //スクロールでキーボードを閉じる
         tableView.keyboardDismissMode = .onDrag
+        tableView.delegate = self
+        tableView.dataSource = self
         
         navigationItem.title = "GitHub リポジトリ検索"
         navigationItem.backButtonTitle = " "
@@ -71,27 +74,27 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     }
     
     
-    //MARK: TABLEVIEW CELL
+    //MARK: TABLEVIEW
     
     //section使う時に必須のメソッド
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return ""
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return repositorySearchBar
     }
     
     //searchBarの幅に合わせる為に必要な処理
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 44
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return responses.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "Repository")
         let response = responses[indexPath.row]
@@ -101,8 +104,9 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         repositorySearchBar.resignFirstResponder()
+        tableView.deselectRow(at: indexPath, animated: true)
         // 画面遷移時に呼ばれる
         index = indexPath.row
         performSegue(withIdentifier: "Detail", sender: nil)
