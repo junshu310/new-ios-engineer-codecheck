@@ -16,7 +16,7 @@ struct RepositoryData {
         static let fullName = "full_name"
         static let lang = "language"
         static let stars = "stargazers_count"
-        static let watchers = "wachers_count"
+        static let watchers = "watchers_count"
         static let forks = "forks_count"
         static let issues = "open_issues_count"
         static let url = "html_url"

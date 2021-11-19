@@ -15,8 +15,8 @@ class AnalyticsModel {
     ///USED PARSE URL
     func parse(urlString: String, handler: @escaping (_ success: Bool, _ items: [[String : Any]]?) -> ()) {
         
-        let encordURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let task = URLSession.shared.dataTask(with: URL(string: encordURL!)!) { (data, res, error) in
+        let encodeURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let task = URLSession.shared.dataTask(with: URL(string: encodeURL!)!) { (data, res, error) in
             //error
             if error != nil {
                 print("ERROR: \(error!.localizedDescription)")
