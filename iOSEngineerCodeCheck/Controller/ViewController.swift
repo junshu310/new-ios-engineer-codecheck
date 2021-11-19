@@ -25,6 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         repositorySearchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         repositorySearchBar.delegate = self
+        tableView.register(UINib(nibName: "CustomCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
         //スクロールでキーボードを閉じる
         tableView.keyboardDismissMode = .onDrag
         tableView.delegate = self
@@ -52,6 +53,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     DispatchQueue.main.async {
                         self.activityIndicator.stopAnimating()
                         self.tableView.reloadData()
+                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -96,11 +98,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell(style: .value1, reuseIdentifier: "Repository")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell") as! CustomCell
         let response = responses[indexPath.row]
-        cell.textLabel?.text = response[RepositoryData.Items.fullName] as? String ?? ""
-        cell.detailTextLabel?.text = response[RepositoryData.Items.lang] as? String ?? ""
-        cell.tag = indexPath.row
+        cell.titleLabel.text = response[RepositoryData.Items.fullName] as? String ?? ""
+        cell.langLabel.text = response[RepositoryData.Items.lang] as? String ?? ""
         return cell
     }
     
